@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-const Button = ({ handleClick }) => {
-  return <button onClick={handleClick}>next anecdote</button>;
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
 };
 
 const App = () => {
@@ -18,8 +18,17 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(Array(8).fill(0));
 
-  const handleClick = () => {
+  const handleVote = () => {
+    const copy = [...votes];
+    copy[selected] += 1;
+    console.log(copy);
+    
+    setVotes(copy);
+  };
+
+  const handleShowNext = () => {
     setSelected(Math.floor(Math.random() * 8));
   };
 
@@ -27,7 +36,10 @@ const App = () => {
     <div>
       {anecdotes[selected]}
       <br />
-      <Button handleClick={handleClick} />
+      has {votes[selected]} votes
+      <br />
+      <Button handleClick={handleVote} text="vote" />
+      <Button handleClick={handleShowNext} text="next anecdote" />
     </div>
   );
 };
