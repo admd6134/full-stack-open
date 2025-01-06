@@ -19,13 +19,14 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(Array(8).fill(0));
+  const [mostVotedIndex, setMostVotedIndex] = useState(0);
 
   const handleVote = () => {
     const copy = [...votes];
     copy[selected] += 1;
-    console.log(copy);
-    
     setVotes(copy);
+    if (copy[selected] + 1 <= votes[mostVotedIndex]) return;
+    setMostVotedIndex(selected);
   };
 
   const handleShowNext = () => {
@@ -40,6 +41,10 @@ const App = () => {
       <br />
       <Button handleClick={handleVote} text="vote" />
       <Button handleClick={handleShowNext} text="next anecdote" />
+      <h1>anecdote with the most votes</h1> <br />
+      {anecdotes[mostVotedIndex]}
+      <br />
+      has {votes[mostVotedIndex]} votes
     </div>
   );
 };
