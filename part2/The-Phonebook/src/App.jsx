@@ -3,6 +3,7 @@ import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import numbers from "./services/numbers";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -15,9 +16,16 @@ const App = () => {
       alert(`${newName} is already added to phonebook`);
       return;
     }
-    setPersons(persons.concat({ name: newName, number: newNumber }));
-    setNewName("");
-    setNewNumber("");
+    numbers
+      .create({ name: newName, number: newNumber })
+      .then((returnedData) => {
+        setPersons(persons.concat(returnedData));
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
   useEffect(() => {
     console.log("effect");
