@@ -6,6 +6,10 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (JSON.stringify(persons).includes(JSON.stringify({ name: newName }))) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
     setPersons(persons.concat({ name: newName }));
     setNewName("");
   };
