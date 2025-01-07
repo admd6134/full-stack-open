@@ -12,4 +12,10 @@ const create = (newObject) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create };
+const remove = (index) => {
+    const request = axios.delete(`http://localhost:3001/persons/${index}`)
+    return request.then((response) => response.data);
+
+}
+
+export default { getAll, create, remove };

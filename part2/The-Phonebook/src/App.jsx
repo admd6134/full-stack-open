@@ -41,6 +41,18 @@ const App = () => {
   const handleFilter = (event) => {
     setFilter(event.target.value);
   };
+
+  const handleRemove = (id) => {
+    const confirmDelete = confirm(
+      `delete ${persons.filter((person) => person.id === id)[0].name} ?`
+    );
+    if (!confirmDelete) return;
+    numbers.remove(id).then((returnedData) => {
+      console.log(returnedData);
+      setPersons(persons.filter((person) => person.id !== id));
+    });
+  };
+
   const namesToShow = !filter
     ? persons
     : persons.filter((person) =>
@@ -57,7 +69,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
-      <Persons namesToShow={namesToShow} />
+      <Persons namesToShow={namesToShow} handleRemove={handleRemove} />
     </div>
   );
 };
