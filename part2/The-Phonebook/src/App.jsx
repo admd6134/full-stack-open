@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [message, setMessage] = useState(null);
+  const [error, setError] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -37,12 +38,10 @@ const App = () => {
             setNewName("");
             setNewNumber("");
           });
-          setMessage(
-            `edited ${newName}`
-          )
-          setTimeout(() => {
-            setMessage(null)
-          }, 5000)
+        setMessage(`edited ${newName}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
         return;
       }
     }
@@ -54,12 +53,10 @@ const App = () => {
         setPersons(persons.concat(returnedData));
         setNewName("");
         setNewNumber("");
-        setMessage(
-          `added ${newName}`
-        )
+        setMessage(`added ${newName}`);
         setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+          setMessage(null);
+        }, 5000);
       })
       .catch((err) => {
         alert(err);
@@ -86,16 +83,30 @@ const App = () => {
       `delete ${persons.filter((person) => person.id === id)[0].name} ?`
     );
     if (!confirmDelete) return;
-    numbers.remove(id).then((returnedData) => {
-      console.log(returnedData);
-      setPersons(persons.filter((person) => person.id !== id));
-      setMessage(
-        `deleted ${persons.filter((person) => person.id === id)[0].name}`
-      )
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    });
+    numbers
+      .remove(id)
+      .then((returnedData) => {
+        console.log(returnedData);
+        setPersons(persons.filter((person) => person.id !== id));
+        setMessage(
+          `deleted ${persons.filter((person) => person.id === id)[0].name}`
+        );
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        setError(true);
+        setMessage(
+          `information of ${
+            persons.filter((person) => person.id === id)[0].name
+          } has already been removed from the server`
+        );
+        setTimeout(() => {
+          setMessage(null);
+          setError(false);
+        }, 5000);
+      });
   };
 
   const namesToShow = !filter
@@ -105,7 +116,7 @@ const App = () => {
       );
   return (
     <div>
-      <Notification message={message} />
+      <Notification message={message} error={error} />
       <h1>Phonebook</h1>
       <Filter filter={filter} handleFilter={handleFilter} />
       <PersonForm
