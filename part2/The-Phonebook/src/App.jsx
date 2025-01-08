@@ -3,12 +3,15 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import numbers from "./services/numbers";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (persons.some((el) => el.name === newName)) {
@@ -34,6 +37,12 @@ const App = () => {
             setNewName("");
             setNewNumber("");
           });
+          setMessage(
+            `edited ${newName}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         return;
       }
     }
@@ -45,6 +54,12 @@ const App = () => {
         setPersons(persons.concat(returnedData));
         setNewName("");
         setNewNumber("");
+        setMessage(
+          `added ${newName}`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
       .catch((err) => {
         alert(err);
@@ -74,6 +89,12 @@ const App = () => {
     numbers.remove(id).then((returnedData) => {
       console.log(returnedData);
       setPersons(persons.filter((person) => person.id !== id));
+      setMessage(
+        `deleted ${persons.filter((person) => person.id === id)[0].name}`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     });
   };
 
@@ -84,6 +105,7 @@ const App = () => {
       );
   return (
     <div>
+      <Notification message={message} />
       <h1>Phonebook</h1>
       <Filter filter={filter} handleFilter={handleFilter} />
       <PersonForm
