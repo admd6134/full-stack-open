@@ -27,6 +27,13 @@ function App() {
       }
     });
   }, [search]);
+
+  const handleShow = (name) => {
+    countries.getCountry(`name/${name}`).then((y) => {
+      setResult(y);
+    });
+  };
+
   return (
     <>
       <div>
@@ -48,7 +55,12 @@ function App() {
       )}
       {result.length <= 10 &&
         result.map((x) => {
-          return <div key={x.name.common}>{x.name.common}</div>;
+          return (
+            <div key={x.name.common}>
+              {x.name.common}
+              <button onClick={() => handleShow(x.name.common)}>show</button>
+            </div>
+          );
         })}
     </>
   );
