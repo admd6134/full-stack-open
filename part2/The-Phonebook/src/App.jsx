@@ -11,10 +11,34 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (JSON.stringify(persons).includes(JSON.stringify({ name: newName }))) {
-      alert(`${newName} is already added to phonebook`);
-      return;
+    if (persons.some((el) => el.name === newName)) {
+      const confirmUpdate = confirm(
+        `${newName} is already added to phonebook, replace the old number with the new one?`
+      );
+      if (confirmUpdate) {
+        const person = persons.find((n) => n.name === newName);
+        numbers
+          .update(person.id, { ...person, number: newNumber })
+          .then((returnedData) => {
+            console.log(
+              persons.map((n) => {
+                return n.id === person.id ? returnedData : n;
+              })
+            );
+
+            setPersons(
+              persons.map((n) => {
+                return n.id === person.id ? returnedData : n;
+              })
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+        return;
+      }
     }
+    console.log("here");
+
     numbers
       .create({ name: newName, number: newNumber })
       .then((returnedData) => {
